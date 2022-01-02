@@ -12,6 +12,7 @@ function App() {
     if (selectedFile !== undefined) {
       const formData = new FormData();
       formData.append('file', selectedFile);
+      formData.append('filename', selectedFile.name);
 
       fetch(
         // 'http://localhost:8080/upload',
@@ -38,10 +39,10 @@ function App() {
         <div>
           <p>Filename: {selectedFile.name}</p>
           <p>Filetype: {selectedFile.type}</p>
-          <p>Size in bytes: {selectedFile.size}</p>
+          <p>Size in bytes: {selectedFile.size.toLocaleString()}</p>
         </div>
       ) : (
-        <p>Select a file to show details</p>
+        <p>Select a file</p>
       )}
       <div>
         <button onClick={handleSubmission}>Submit</button>
