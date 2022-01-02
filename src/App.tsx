@@ -1,8 +1,7 @@
-import React, { useState } from 'react';
-import logo from './logo.svg';
+import React, {ReactElement, useState} from 'react';
 import './App.scss';
 
-function App() {
+const App = (): ReactElement => {
   const [selectedFile, setSelectedFile] = useState<File>();
   const changeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSelectedFile(event.target.files?.[0]);
@@ -15,11 +14,11 @@ function App() {
       formData.append('filename', selectedFile.name);
 
       fetch(
-        // 'http://localhost:8080/upload',
-        'https://kantanmemo-backend.herokuapp.com/upload',
+        'http://localhost:8080/upload',
+        // 'https://kantanmemo-backend.herokuapp.com/upload',
         {
           method: 'POST',
-          body: formData,
+          body: formData
         }
       )
         .then((response) => response.text())
@@ -49,6 +48,6 @@ function App() {
       </div>
     </div>
   );
-}
+};
 
 export default App;
