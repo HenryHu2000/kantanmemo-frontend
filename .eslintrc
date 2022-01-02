@@ -117,7 +117,7 @@
       }
     ],
     "@typescript-eslint/unified-signatures": "error",
-    "arrow-body-style": "error",
+    "arrow-body-style": "warn",
     "comma-dangle": [
       "error",
       {
