@@ -14,8 +14,8 @@ const App = (): ReactElement => {
       formData.append('filename', selectedFile.name);
 
       fetch(
-        'http://localhost:8080/upload',
-        // 'https://kantanmemo-backend.herokuapp.com/upload',
+        // 'http://localhost:8080/upload',
+        'https://kantanmemo-backend.herokuapp.com/upload',
         {
           method: 'POST',
           body: formData
