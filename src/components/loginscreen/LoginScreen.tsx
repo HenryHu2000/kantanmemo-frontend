@@ -4,13 +4,13 @@ import {BACKEND_URL} from '../../globals';
 
 const LoginScreen = (props: {login: (userId: number) => void}): ReactElement => {
   const [isRegistering, setIsRegistering] = useState<boolean>(false);
-  const [userNameText, setUserNameText] = useState<string>();
-  const [userIdText, setUserIdText] = useState<string>();
+  const [userNameText, setUserNameText] = useState<string>('');
+  const [userIdText, setUserIdText] = useState<string>('');
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (isRegistering) {
-      if (userNameText) {
+      if (userNameText !== '') {
         const data = new URLSearchParams([['user_name', userNameText]]);
         fetch(
           BACKEND_URL + '/user/register',
@@ -29,7 +29,7 @@ const LoginScreen = (props: {login: (userId: number) => void}): ReactElement => 
           });
       }
     } else {
-      if (userIdText) {
+      if (userIdText !== '') {
         props.login(Number(userIdText));
       }
     }
@@ -58,6 +58,7 @@ const LoginScreen = (props: {login: (userId: number) => void}): ReactElement => 
                 id="name"
                 label="Name"
                 autoFocus
+                value={userNameText}
                 onChange={(e) => {
                   setUserNameText(e.target.value);
                 }}
@@ -69,6 +70,7 @@ const LoginScreen = (props: {login: (userId: number) => void}): ReactElement => 
                 id="user_id"
                 label="User ID"
                 autoFocus
+                value={userIdText}
                 onChange={(e) => {
                   setUserIdText(e.target.value);
                 }}
@@ -84,7 +86,9 @@ const LoginScreen = (props: {login: (userId: number) => void}): ReactElement => 
             </Button>
             <Grid container justifyContent="flex-end">
               <Grid item>
-                <Link href="#" variant="body2" onClick={() => {setIsRegistering(!isRegistering);}}>
+                <Link href="#" variant="body2" onClick={() => {
+                  setIsRegistering(!isRegistering);
+                }}>
                   {isRegistering ? 'Already have an account? Sign in' : 'Don\'t have an account? Sign Up'}
                 </Link>
               </Grid>

@@ -2,7 +2,7 @@ import React, {ReactElement, useCallback, useEffect, useState} from 'react';
 import {useCookies} from 'react-cookie';
 import HomeScreen from './components/homescreen/HomeScreen';
 import LoginScreen from './components/loginscreen/LoginScreen';
-import {BACKEND_URL} from './globals';
+import {BACKEND_URL, COOKIE_DOMAIN} from './globals';
 import './App.scss';
 import {User} from './types';
 
@@ -32,7 +32,7 @@ const App = (): ReactElement => {
   }, [cookies.user_id, removeCookie]);
   
   const login = (userId: number) => {
-    setCookie('user_id', userId);
+    setCookie('user_id', userId, {domain: COOKIE_DOMAIN});
     updateUser();
   };
   const logout = () => {
