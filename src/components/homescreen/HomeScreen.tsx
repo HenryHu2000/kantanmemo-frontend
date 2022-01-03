@@ -1,4 +1,4 @@
-import {Dialog, DialogContent, DialogTitle, Divider, IconButton, Menu, MenuItem} from '@mui/material';
+import {Container, CssBaseline, Dialog, DialogContent, DialogTitle, Divider, IconButton, Menu, MenuItem} from '@mui/material';
 import React, {ReactElement, useState} from 'react';
 import MenuIcon from '@mui/icons-material/Menu';
 import Settings from './settings/Settings';
@@ -17,7 +17,7 @@ const HomeScreen = (props: {user: User; logout: () => void}): ReactElement => {
         <IconButton onClick={(e) => {
           setAnchorEl(e.currentTarget);
         }}>
-          <MenuIcon/>
+          <MenuIcon fontSize='large'/>
         </IconButton>
       </div>
       <Menu
@@ -52,6 +52,9 @@ const HomeScreen = (props: {user: User; logout: () => void}): ReactElement => {
           <Settings/>
         </DialogContent>
       </Dialog>
+      <Container component="main" maxWidth="xs">
+        <CssBaseline />
+      </Container>
     </div>
   );
 };
