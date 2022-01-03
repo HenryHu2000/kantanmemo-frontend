@@ -1,8 +1,8 @@
 import React, {ReactElement, useEffect, useState} from 'react';
 import './Settings.scss';
-import {BACKEND_URL} from '../../globals';
+import {BACKEND_URL} from '../../../globals';
 import {RadioGroup, FormControlLabel, Radio , FormControl, FormLabel, Input, Button} from '@mui/material';
-import {Wordlist} from './types';
+import {Wordlist} from '../../../types';
 
 const Settings = (): ReactElement => {
   const [selectedFile, setSelectedFile] = useState<File>();
@@ -48,13 +48,12 @@ const Settings = (): ReactElement => {
 
   const handleSelectWordlist = (event: React.ChangeEvent<HTMLInputElement>, value: string) => {
     setSelectedWordlistId(Number(value));
-    const formData = new FormData();
-    formData.append('wordlist_id', value);
+    const data = new URLSearchParams([['wordlist_id', value]]);
     fetch(
       BACKEND_URL + '/wordlist/select',
       {
         method: 'POST',
-        body: formData,
+        body: data,
         credentials: 'include'
       }
     )

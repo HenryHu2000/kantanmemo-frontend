@@ -1,31 +1,53 @@
-import {Dialog, DialogContent, DialogTitle, IconButton} from '@mui/material';
-import React, {ReactElement, useState} from 'react';
-import SettingsIcon from '@mui/icons-material/Settings';
-import Settings from './components/settings/Settings';
+import React, {ReactElement, useCallback, useEffect, useState} from 'react';
+import {useCookies} from 'react-cookie';
+import HomeScreen from './components/homescreen/HomeScreen';
+import LoginScreen from './components/loginscreen/LoginScreen';
+import {BACKEND_URL} from './globals';
 import './App.scss';
+import {User} from './types';
 
 const App = (): ReactElement => {
-  const [open, setOpen] = useState(false);
-  const handleClickOpen = () => {
-    setOpen(true);
+  const [cookies, setCookie, removeCookie] = useCookies(['user_id']);
+  const [user, setUser] = useState<User>();
+
+  const updateUser = useCallback(() => {
+    if (cookies.user_id) {
+      fetch(
+        BACKEND_URL + '/user/me',
+        {
+          method: 'GET',
+          credentials: 'include'
+        }
+      )
+        .then((response) => response.json())
+        .then((result: User) => {
+          setUser(result);
+        })
+        .catch((error) => {
+          console.error('Error:', error);
+          removeCookie('user_id');
+          setUser(undefined);
+        });
+    }
+  }, [cookies.user_id, removeCookie]);
+  
+  const login = (userId: number) => {
+    setCookie('user_id', userId);
+    updateUser();
   };
-  const handleClose = () => {
-    setOpen(false);
+  const logout = () => {
+    removeCookie('user_id');
+    setUser(undefined);
   };
+
+  useEffect(() => {
+    updateUser();
+  }, [updateUser]);
+
   return (
-    <div className="App">
-      <div className="settings-button">
-        <IconButton onClick={handleClickOpen}>
-          <SettingsIcon/>
-        </IconButton>
-      </div>
-      <Dialog open={open} onClose={handleClose}>
-        <DialogTitle>Settings</DialogTitle>
-        <DialogContent>
-          <Settings/>
-        </DialogContent>
-      </Dialog>
-    </div>
+    user
+      ? <HomeScreen user={user} logout={logout}/>
+      : <LoginScreen login={login}/>
   );
 };
 
