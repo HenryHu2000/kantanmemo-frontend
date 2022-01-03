@@ -1,5 +1,6 @@
-import React, {ReactElement, useCallback, useEffect, useState} from 'react';
+import React, {ReactElement, useCallback, useEffect, useMemo, useState} from 'react';
 import {useCookies} from 'react-cookie';
+import {CookieSetOptions} from 'universal-cookie';
 import HomeScreen from './components/homescreen/HomeScreen';
 import LoginScreen from './components/loginscreen/LoginScreen';
 import {BACKEND_URL, COOKIE_DOMAIN} from './globals';
@@ -9,7 +10,8 @@ import {User} from './types';
 const App = (): ReactElement => {
   const [cookies, setCookie, removeCookie] = useCookies(['user_id']);
   const [user, setUser] = useState<User>();
-
+  const cookieSetOptions: CookieSetOptions 
+    = useMemo<CookieSetOptions>(() => ({domain: COOKIE_DOMAIN, sameSite: 'lax'}), []);
   const updateUser = useCallback(() => {
     if (cookies.user_id) {
       fetch(
@@ -25,18 +27,19 @@ const App = (): ReactElement => {
         })
         .catch((error) => {
           console.error('Error:', error);
-          removeCookie('user_id');
+          removeCookie('user_id', cookieSetOptions);
           setUser(undefined);
         });
     }
-  }, [cookies.user_id, removeCookie]);
+  }, [cookieSetOptions, cookies.user_id, removeCookie]);
   
   const login = (userId: number) => {
-    setCookie('user_id', userId, {domain: COOKIE_DOMAIN});
+    setCookie('user_id', userId, cookieSetOptions);
     updateUser();
   };
+
   const logout = () => {
-    removeCookie('user_id');
+    removeCookie('user_id', cookieSetOptions);
     setUser(undefined);
   };
 
