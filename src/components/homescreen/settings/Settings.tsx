@@ -12,7 +12,7 @@ const Settings = (): ReactElement => {
   const [wordlists, setWordlists] = useState<Wordlist[]>();
   const defaultUserSettings: UserSettings 
     = {dailyNewWordNum: DEFAULT_DAILY_NEW_WORD_NUM, dailyRevisingWordNum: DEFAULT_DAILY_REVISING_WORD_NUM};
-  const [userSettings, setUserSettings] = useState<UserSettings>(defaultUserSettings);
+  const [userSettings, setUserSettings] = useState<UserSettings>();
 
   const updateWordlists = () => {
     fetch(
@@ -115,10 +115,13 @@ const Settings = (): ReactElement => {
             }}
             size="small"
             margin="normal" 
-            value={userSettings.dailyNewWordNum}
+            value={userSettings?.dailyNewWordNum ?? 0}
             onChange={(event) => {
-              const newUserSettings = {...userSettings, dailyNewWordNum: Number(event.currentTarget.value)};
-              handleChangeUserSettings(newUserSettings);
+              if (userSettings) {
+                handleChangeUserSettings({...userSettings, dailyNewWordNum: Number(event.currentTarget.value)});
+              } else {
+                handleChangeUserSettings({...defaultUserSettings, dailyNewWordNum: Number(event.currentTarget.value)});                
+              }
             }}
           />
           <TextField
@@ -129,20 +132,26 @@ const Settings = (): ReactElement => {
             }}
             size="small"
             margin="normal" 
-            value={userSettings.dailyRevisingWordNum}
+            value={userSettings?.dailyRevisingWordNum ?? 0}
             onChange={(event) => {
-              const newUserSettings = {...userSettings, dailyRevisingWordNum: Number(event.currentTarget.value)};
-              handleChangeUserSettings(newUserSettings);
+              if (userSettings) {
+                handleChangeUserSettings({...userSettings, dailyRevisingWordNum: Number(event.currentTarget.value)});
+              } else {
+                handleChangeUserSettings({...defaultUserSettings, dailyRevisingWordNum: Number(event.currentTarget.value)});                
+              }
             }}
           />
           <FormLabel component="legend">Word Lists</FormLabel>
           <RadioGroup
             aria-label="wordlist"
             name="radio-buttons-group"
-            value={userSettings.currentWordlistId ?? -1}
+            value={userSettings?.currentWordlistId ?? -1}
             onChange={(event) => {
-              const newUserSettings = {...userSettings, currentWordlistId: Number(event.currentTarget.value)};
-              handleChangeUserSettings(newUserSettings);
+              if (userSettings) {
+                handleChangeUserSettings({...userSettings, currentWordlistId: Number(event.currentTarget.value)});
+              } else {
+                handleChangeUserSettings({...defaultUserSettings, currentWordlistId: Number(event.currentTarget.value)});                
+              }
             }}
           >
             {wordlists?.map((wordlist) => 
