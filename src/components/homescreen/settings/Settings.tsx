@@ -49,7 +49,6 @@ const Settings = (): ReactElement => {
   }, []);
 
   const handleChangeUserSettings = (newUserSettings: UserSettings) => {
-    console.log(JSON.stringify(newUserSettings));
     fetch(
       BACKEND_URL + '/user/settings/edit',
       {
