@@ -1,8 +1,12 @@
 export interface User {
   id: number;
   name: string;
-  currentWordlist: Wordlist;
+  userSettings: UserSettings;
   progress: any;
+};
+
+export interface UserSettings {
+  currentWordlistId: number;
 };
 
 export interface Wordlist {

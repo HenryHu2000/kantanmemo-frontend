@@ -1,8 +1,8 @@
-import React, {ReactElement, useEffect, useState} from 'react';
+import React, {ReactElement, useEffect, useState, useCallback} from 'react';
 import './Settings.scss';
 import {BACKEND_URL} from '../../../globals';
 import {RadioGroup, FormControlLabel, Radio , FormControl, FormLabel, Input, Button} from '@mui/material';
-import {Wordlist} from '../../../types';
+import {Wordlist, UserSettings} from '../../../types';
 
 const Settings = (): ReactElement => {
   const [selectedFile, setSelectedFile] = useState<File>();
@@ -10,7 +10,7 @@ const Settings = (): ReactElement => {
     setSelectedFile(event.target.files?.[0]);
   };
   const [wordlists, setWordlists] = useState<Wordlist[]>();
-  const [selectedWordlistId, setSelectedWordlistId] = useState<number>(-1);
+  const [userSettings, setUserSettings] = useState<UserSettings>();
 
   const updateWordlists = () => {
     fetch(
@@ -29,41 +29,46 @@ const Settings = (): ReactElement => {
       });
   };
 
-  const updateSelectedWordlistId = () => {
+  const updateUserSettings = useCallback(() => {
     fetch(
-      BACKEND_URL + '/wordlist/current',
+      BACKEND_URL + '/user/settings',
       {
         method: 'GET',
         credentials: 'include'
       }
     )
       .then((response) => response.json())
-      .then((result: Wordlist) => {
-        setSelectedWordlistId(result.id);
+      .then((result: UserSettings) => {
+        setUserSettings(result);
       })
       .catch((error) => {
         console.error('Error:', error);
       });
-  };
+  }, []);
 
-  const handleSelectWordlist = (event: React.ChangeEvent<HTMLInputElement>, value: string) => {
-    setSelectedWordlistId(Number(value));
-    const data = new URLSearchParams([['wordlist_id', value]]);
-    fetch(
-      BACKEND_URL + '/wordlist/select',
-      {
-        method: 'POST',
-        body: data,
-        credentials: 'include'
-      }
-    )
-      .then((response) => response.json())
-      .then((result: Wordlist) => {
-        setSelectedWordlistId(result.id);
-      })        
-      .catch((error) => {
-        console.error('Error:', error);
-      });
+  const handleChangeUserSettings = (newUserSettings: UserSettings) => {
+    if (newUserSettings) {
+      console.log(JSON.stringify(newUserSettings));
+      fetch(
+        BACKEND_URL + '/user/settings/edit',
+        {
+          method: 'POST',
+          body: JSON.stringify(newUserSettings),
+          credentials: 'include',
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        }
+      )
+        .then((response) => response.json())
+        .then((result: UserSettings) => {
+          setUserSettings(result);
+          console.log('Success:', result);
+        })
+        .catch((error) => {
+          console.error('Error:', error);
+        });
+    }
   };
 
   const handleUpload = () => {
@@ -94,9 +99,9 @@ const Settings = (): ReactElement => {
 
   useEffect(() => {
     updateWordlists();
-    updateSelectedWordlistId();
-  }, []);
-
+    updateUserSettings();
+  }, [updateUserSettings]);
+  
   return (
     <div className="Settings">
       <div className="wordlist-selection">
@@ -105,8 +110,11 @@ const Settings = (): ReactElement => {
           <RadioGroup
             aria-label="wordlist"
             name="radio-buttons-group"
-            value={selectedWordlistId}
-            onChange={handleSelectWordlist}
+            value={userSettings?.currentWordlistId ?? -1}
+            onChange={(event) => {
+              const newUserSettings = {...userSettings, currentWordlistId: Number(event.currentTarget.value)};
+              handleChangeUserSettings(newUserSettings);
+            }}
           >
             {wordlists?.map((wordlist) => 
               (<FormControlLabel 
