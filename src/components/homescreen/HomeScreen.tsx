@@ -1,5 +1,5 @@
 import {Container, CssBaseline, Dialog, DialogContent, DialogTitle, Divider, IconButton, Menu, MenuItem} from '@mui/material';
-import React, {ReactElement, useState} from 'react';
+import React, {ReactElement, useEffect, useState} from 'react';
 import MenuIcon from '@mui/icons-material/Menu';
 import Settings from './settings/Settings';
 import './HomeScreen.scss';
@@ -11,6 +11,13 @@ const HomeScreen = (props: {user: User; logout: () => void}): ReactElement => {
   const handleClose = () => {
     setAnchorEl(undefined);
   };
+
+  useEffect(() => {
+    if (!props.user.userSettings) {
+      setIsSettingsOpen(true);
+    }
+  }, [props.user.userSettings]);
+
   return (
     <div className="HomeScreen">
       <div className="settings-button">

@@ -1,7 +1,7 @@
 import React, {ReactElement, useEffect, useState, useCallback} from 'react';
 import './Settings.scss';
-import {BACKEND_URL} from '../../../globals';
-import {RadioGroup, FormControlLabel, Radio , FormControl, FormLabel, Input, Button} from '@mui/material';
+import {BACKEND_URL, DEFAULT_DAILY_NEW_WORD_NUM, DEFAULT_DAILY_REVISING_WORD_NUM} from '../../../globals';
+import {RadioGroup, FormControlLabel, Radio , FormControl, FormLabel, Input, Button, TextField} from '@mui/material';
 import {Wordlist, UserSettings} from '../../../types';
 
 const Settings = (): ReactElement => {
@@ -10,7 +10,9 @@ const Settings = (): ReactElement => {
     setSelectedFile(event.target.files?.[0]);
   };
   const [wordlists, setWordlists] = useState<Wordlist[]>();
-  const [userSettings, setUserSettings] = useState<UserSettings>();
+  const defaultUserSettings: UserSettings 
+    = {dailyNewWordNum: DEFAULT_DAILY_NEW_WORD_NUM, dailyRevisingWordNum: DEFAULT_DAILY_REVISING_WORD_NUM};
+  const [userSettings, setUserSettings] = useState<UserSettings>(defaultUserSettings);
 
   const updateWordlists = () => {
     fetch(
@@ -47,28 +49,26 @@ const Settings = (): ReactElement => {
   }, []);
 
   const handleChangeUserSettings = (newUserSettings: UserSettings) => {
-    if (newUserSettings) {
-      console.log(JSON.stringify(newUserSettings));
-      fetch(
-        BACKEND_URL + '/user/settings/edit',
-        {
-          method: 'POST',
-          body: JSON.stringify(newUserSettings),
-          credentials: 'include',
-          headers: {
-            'Content-Type': 'application/json'
-          }
+    console.log(JSON.stringify(newUserSettings));
+    fetch(
+      BACKEND_URL + '/user/settings/edit',
+      {
+        method: 'POST',
+        body: JSON.stringify(newUserSettings),
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json'
         }
-      )
-        .then((response) => response.json())
-        .then((result: UserSettings) => {
-          setUserSettings(result);
-          console.log('Success:', result);
-        })
-        .catch((error) => {
-          console.error('Error:', error);
-        });
-    }
+      }
+    )
+      .then((response) => response.json())
+      .then((result: UserSettings) => {
+        setUserSettings(result);
+        console.log('Success:', result);
+      })
+      .catch((error) => {
+        console.error('Error:', error);
+      });
   };
 
   const handleUpload = () => {
@@ -106,11 +106,40 @@ const Settings = (): ReactElement => {
     <div className="Settings">
       <div className="wordlist-selection">
         <FormControl component="fieldset">
-          <FormLabel component="legend">Wordlist</FormLabel>
+          <FormLabel component="legend">Daily Goals</FormLabel>
+          <TextField
+            label="New words"
+            type="number"
+            InputLabelProps={{
+              shrink: true
+            }}
+            size="small"
+            margin="normal" 
+            value={userSettings.dailyNewWordNum}
+            onChange={(event) => {
+              const newUserSettings = {...userSettings, dailyNewWordNum: Number(event.currentTarget.value)};
+              handleChangeUserSettings(newUserSettings);
+            }}
+          />
+          <TextField
+            label="Revising words"
+            type="number"
+            InputLabelProps={{
+              shrink: true
+            }}
+            size="small"
+            margin="normal" 
+            value={userSettings.dailyRevisingWordNum}
+            onChange={(event) => {
+              const newUserSettings = {...userSettings, dailyRevisingWordNum: Number(event.currentTarget.value)};
+              handleChangeUserSettings(newUserSettings);
+            }}
+          />
+          <FormLabel component="legend">Word Lists</FormLabel>
           <RadioGroup
             aria-label="wordlist"
             name="radio-buttons-group"
-            value={userSettings?.currentWordlistId ?? -1}
+            value={userSettings.currentWordlistId ?? -1}
             onChange={(event) => {
               const newUserSettings = {...userSettings, currentWordlistId: Number(event.currentTarget.value)};
               handleChangeUserSettings(newUserSettings);

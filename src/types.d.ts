@@ -6,7 +6,9 @@ export interface User {
 };
 
 export interface UserSettings {
-  currentWordlistId: number;
+  currentWordlistId?: number;
+  dailyNewWordNum: number;
+  dailyRevisingWordNum: number;
 };
 
 export interface Wordlist {
