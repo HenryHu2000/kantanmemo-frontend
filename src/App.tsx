@@ -49,7 +49,7 @@ const App = (): ReactElement => {
 
   return (
     user
-      ? <HomeScreen user={user} logout={logout}/>
+      ? <HomeScreen user={user} setUser={setUser} logout={logout}/>
       : <LoginScreen login={login}/>
   );
 };

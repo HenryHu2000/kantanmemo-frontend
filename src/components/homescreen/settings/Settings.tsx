@@ -1,10 +1,10 @@
 import React, {ReactElement, useEffect, useState, useCallback} from 'react';
-import './Settings.scss';
 import {BACKEND_URL, DEFAULT_DAILY_NEW_WORD_NUM, DEFAULT_DAILY_REVISING_WORD_NUM} from '../../../globals';
 import {RadioGroup, FormControlLabel, Radio , FormControl, FormLabel, Input, Button, TextField} from '@mui/material';
 import {Wordlist, UserSettings} from '../../../types';
+import './Settings.scss';
 
-const Settings = (): ReactElement => {
+const Settings = (props: {userSettings?: UserSettings; setUserSettings: (userSettings?: UserSettings) => void}): ReactElement => {
   const [selectedFile, setSelectedFile] = useState<File>();
   const changeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSelectedFile(event.target.files?.[0]);
@@ -12,7 +12,6 @@ const Settings = (): ReactElement => {
   const [wordlists, setWordlists] = useState<Wordlist[]>();
   const defaultUserSettings: UserSettings 
     = {dailyNewWordNum: DEFAULT_DAILY_NEW_WORD_NUM, dailyRevisingWordNum: DEFAULT_DAILY_REVISING_WORD_NUM};
-  const [userSettings, setUserSettings] = useState<UserSettings>();
 
   const updateWordlists = () => {
     fetch(
@@ -41,12 +40,12 @@ const Settings = (): ReactElement => {
     )
       .then((response) => response.json())
       .then((result: UserSettings) => {
-        setUserSettings(result);
+        props.setUserSettings(result);
       })
       .catch((error) => {
         console.error('Error:', error);
       });
-  }, []);
+  }, [props]);
 
   const handleChangeUserSettings = (newUserSettings: UserSettings) => {
     fetch(
@@ -62,8 +61,8 @@ const Settings = (): ReactElement => {
     )
       .then((response) => response.json())
       .then((result: UserSettings) => {
-        setUserSettings(result);
         console.log('Success:', result);
+        props.setUserSettings(result);
       })
       .catch((error) => {
         console.error('Error:', error);
@@ -114,10 +113,10 @@ const Settings = (): ReactElement => {
             }}
             size="small"
             margin="normal" 
-            value={userSettings?.dailyNewWordNum ?? 0}
+            value={props.userSettings?.dailyNewWordNum ?? 0}
             onChange={(event) => {
-              if (userSettings) {
-                handleChangeUserSettings({...userSettings, dailyNewWordNum: Number(event.currentTarget.value)});
+              if (props.userSettings) {
+                handleChangeUserSettings({...props.userSettings, dailyNewWordNum: Number(event.currentTarget.value)});
               } else {
                 handleChangeUserSettings({...defaultUserSettings, dailyNewWordNum: Number(event.currentTarget.value)});                
               }
@@ -131,10 +130,10 @@ const Settings = (): ReactElement => {
             }}
             size="small"
             margin="normal" 
-            value={userSettings?.dailyRevisingWordNum ?? 0}
+            value={props.userSettings?.dailyRevisingWordNum ?? 0}
             onChange={(event) => {
-              if (userSettings) {
-                handleChangeUserSettings({...userSettings, dailyRevisingWordNum: Number(event.currentTarget.value)});
+              if (props.userSettings) {
+                handleChangeUserSettings({...props.userSettings, dailyRevisingWordNum: Number(event.currentTarget.value)});
               } else {
                 handleChangeUserSettings({...defaultUserSettings, dailyRevisingWordNum: Number(event.currentTarget.value)});                
               }
@@ -144,10 +143,10 @@ const Settings = (): ReactElement => {
           <RadioGroup
             aria-label="wordlist"
             name="radio-buttons-group"
-            value={userSettings?.currentWordlistId ?? -1}
+            value={props.userSettings?.currentWordlistId ?? -1}
             onChange={(event) => {
-              if (userSettings) {
-                handleChangeUserSettings({...userSettings, currentWordlistId: Number(event.currentTarget.value)});
+              if (props.userSettings) {
+                handleChangeUserSettings({...props.userSettings, currentWordlistId: Number(event.currentTarget.value)});
               } else {
                 handleChangeUserSettings({...defaultUserSettings, currentWordlistId: Number(event.currentTarget.value)});                
               }

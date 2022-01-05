@@ -2,10 +2,11 @@ import {Container, CssBaseline, Dialog, DialogContent, DialogTitle, Divider, Ico
 import React, {ReactElement, useEffect, useState} from 'react';
 import MenuIcon from '@mui/icons-material/Menu';
 import Settings from './settings/Settings';
+import {User, UserSettings} from '../../types';
+import LearningPanel from './learningpanel/LearningPanel';
 import './HomeScreen.scss';
-import {User} from '../../types';
 
-const HomeScreen = (props: {user: User; logout: () => void}): ReactElement => {
+const HomeScreen = (props: {user: User; setUser: (user?: User) => void; logout: () => void}): ReactElement => {
   const [isSettingsOpen, setIsSettingsOpen] = useState<boolean>(false);
   const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement>();
   const handleClose = () => {
@@ -56,11 +57,16 @@ const HomeScreen = (props: {user: User; logout: () => void}): ReactElement => {
       }}>
         <DialogTitle>Settings</DialogTitle>
         <DialogContent>
-          <Settings/>
+          <Settings userSettings={props.user.userSettings ?? undefined} setUserSettings={(userSettings?: UserSettings) => {
+            props.setUser({...props.user, userSettings: userSettings ?? null});
+          }}/>
         </DialogContent>
       </Dialog>
       <Container component="main" maxWidth="xs">
         <CssBaseline />
+        {props.user.userSettings && (
+          <LearningPanel />
+        )}
       </Container>
     </div>
   );
