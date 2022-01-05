@@ -48,9 +48,12 @@ const App = (): ReactElement => {
   }, [updateUser]);
 
   return (
-    user
-      ? <HomeScreen user={user} setUser={setUser} logout={logout}/>
-      : <LoginScreen login={login}/>
+    <div className="App">
+      {user
+        ? (<HomeScreen user={user} setUser={setUser} logout={logout}/>)
+        : (<LoginScreen login={login}/>)
+      }
+    </div>
   );
 };
 

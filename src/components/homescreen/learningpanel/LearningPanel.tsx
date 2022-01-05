@@ -64,63 +64,80 @@ const LearningPanel = (): ReactElement => {
 
   return (
     <div className="LearningPanel">
-      {currentWord 
-        ? (
-          <>
-            <Typography component="h1" variant="h5">
-              {currentWord.word.name}
-            </Typography>
-            <Typography component="h1" variant="h5">
-              {panelState !== PanelState.QUESTION && currentWord.word.hint}
-            </Typography>
-            <Typography component="h1" variant="h5">
-              {panelState === PanelState.ANSWER && currentWord.word.definition}
-            </Typography>
-            <ButtonGroup
-              orientation="vertical"
-              aria-label="vertical contained button group"
-            >
-              <Button key="known"
-                disabled={panelState === PanelState.ANSWER}
-                onClick={() => {
-                  if (isKnown === undefined) {
-                    setIsKnown(true);
-                  }
-                  setPanelState(PanelState.ANSWER);
-                }}
+      <Box
+        sx={{
+          marginTop: 8,
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center'
+        }}
+      >
+        {currentWord 
+          ? (
+            <>
+              <div className="word-texts">
+                <Typography component="h2" variant="h4">
+                  {currentWord.word.name}
+                </Typography>
+                <Typography component="h2" variant="h4" color="text.disabled">
+                  {panelState !== PanelState.QUESTION && currentWord.word.hint}
+                </Typography>
+                <Typography component="h2" variant="h4">
+                  {panelState === PanelState.ANSWER && currentWord.word.definition}
+                </Typography>
+              </div>
+              <ButtonGroup
+                orientation="vertical"
+                aria-label="vertical contained button group"
               >
-                I know this word
-              </Button>
-              <Button key="unknown"
-                disabled={panelState === PanelState.ANSWER}
-                onClick={() => {
-                  setIsKnown(false);
-                  if (panelState === PanelState.QUESTION) {
-                    setPanelState(PanelState.HINT);
-                  } else {
+                <Button 
+                  key="known"
+                  size="large"
+                  disabled={panelState === PanelState.ANSWER}
+                  onClick={() => {
+                    if (isKnown === undefined) {
+                      setIsKnown(true);
+                    }
                     setPanelState(PanelState.ANSWER);
-                  }
-                }}
-              >
-                I don't know
-              </Button>
-              <Button key="next"
-                disabled={panelState !== PanelState.ANSWER}
-                onClick={() => {
-                  handleProceed();
-                }}
-              >
-                Next
-              </Button>
-            </ButtonGroup>
-          </>
-        )
-        : (
-          <Typography component="h1" variant="h5">
-            You've done your daily goal!
-          </Typography>
-        )
-      }
+                  }}
+                >
+                  I know this word
+                </Button>
+                <Button 
+                  key="unknown"
+                  size="large"
+                  disabled={panelState === PanelState.ANSWER}
+                  onClick={() => {
+                    setIsKnown(false);
+                    if (panelState === PanelState.QUESTION) {
+                      setPanelState(PanelState.HINT);
+                    } else {
+                      setPanelState(PanelState.ANSWER);
+                    }
+                  }}
+                >
+                  I don't know
+                </Button>
+                <Button 
+                  key="next"
+                  size="large"
+                  disabled={panelState !== PanelState.ANSWER}
+                  onClick={() => {
+                    handleProceed();
+                  }}
+                >
+                  Next
+                </Button>
+              </ButtonGroup>
+            </>
+          )
+          : (
+            <Typography component="h2" variant="h5">
+              You've done your daily goal!
+            </Typography>
+          )
+        }
+      </Box>
     </div>
   );
 };

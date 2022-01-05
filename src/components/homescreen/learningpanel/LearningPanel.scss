@@ -1,6 +1,6 @@
 .LearningPanel {
-  padding-top: 64px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+  .word-texts {
+    height: 150px;
+    text-align: center;
+  }
 }
