@@ -63,27 +63,29 @@ const LoginScreen = (props: {login: (userId: number) => void; isLoginSuccessful?
                   setUserNameText(e.target.value);
                 }}
               />
-              : <TextField
-                name="user_id"
-                required
-                fullWidth
-                id="user_id"
-                label="User ID"
-                autoFocus
-                value={userIdText}
-                onChange={(e) => {
-                  setUserIdText(e.target.value);
-                }}
-              />
+              : <>
+                <TextField
+                  name="user_id"
+                  required
+                  fullWidth
+                  id="user_id"
+                  label="User ID"
+                  autoFocus
+                  value={userIdText}
+                  onChange={(e) => {
+                    setUserIdText(e.target.value);
+                  }}
+                />
+                <Collapse in={props.isLoginSuccessful === false}>
+                  <Alert
+                    severity="error"
+                    sx={{mb: 2}}
+                  >
+                    Error: Sign-in failed
+                  </Alert>
+                </Collapse>
+              </>
             }
-            <Collapse in={props.isLoginSuccessful === false}>
-              <Alert
-                severity="error"
-                sx={{mb: 2}}
-              >
-                Error: Sign-in failed
-              </Alert>
-            </Collapse>
             <Button
               type="submit"
               fullWidth

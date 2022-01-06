@@ -54,11 +54,12 @@ const LearningPanel = (): ReactElement => {
                 setPanelState(PanelState.QUESTION);
               }
               setIsKnown(undefined);
+              setIsLoading(false);
             })
             .catch(() => {
               setCurrentWord(undefined);
+              setIsLoading(false);
             });
-          setIsLoading(false);
         })
         .catch((error) => {
           console.error('Error:', error);
