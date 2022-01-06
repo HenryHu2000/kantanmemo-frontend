@@ -187,7 +187,7 @@ const LearningPanel = (): ReactElement => {
             )
           )
           : (
-            <Typography component="h2" variant="h5">
+            <Typography component="h2" variant="h5" color="text.secondary">
               You've done your daily goal!
             </Typography>
           )

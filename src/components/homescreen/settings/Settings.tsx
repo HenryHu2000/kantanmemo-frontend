@@ -107,7 +107,7 @@ const Settings = (props: {updateUser: () => void}): ReactElement => {
   
   return (
     <div className="Settings">
-      <div className="wordlist-selection">
+      <div className="daily-goals">
         <FormControl component="fieldset">
           <FormLabel component="legend">Daily Goals</FormLabel>
           <TextField
@@ -118,7 +118,7 @@ const Settings = (props: {updateUser: () => void}): ReactElement => {
             }}
             size="small"
             margin="normal" 
-            value={userSettings?.dailyNewWordNum ?? 0}
+            value={userSettings?.dailyNewWordNum ?? DEFAULT_DAILY_NEW_WORD_NUM}
             onChange={(event) => {
               if (userSettings) {
                 handleChangeUserSettings({...userSettings, dailyNewWordNum: Number(event.currentTarget.value)});
@@ -135,7 +135,7 @@ const Settings = (props: {updateUser: () => void}): ReactElement => {
             }}
             size="small"
             margin="normal" 
-            value={userSettings?.dailyRevisingWordNum ?? 0}
+            value={userSettings?.dailyRevisingWordNum ?? DEFAULT_DAILY_REVISING_WORD_NUM}
             onChange={(event) => {
               if (userSettings) {
                 handleChangeUserSettings({...userSettings, dailyRevisingWordNum: Number(event.currentTarget.value)});
@@ -144,6 +144,10 @@ const Settings = (props: {updateUser: () => void}): ReactElement => {
               }
             }}
           />
+        </FormControl>
+      </div>
+      <div className="wordlist-selection">
+        <FormControl component="fieldset">
           <FormLabel component="legend">Word Lists</FormLabel>
           <RadioGroup
             aria-label="wordlist"
