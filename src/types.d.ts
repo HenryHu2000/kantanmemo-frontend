@@ -30,3 +30,9 @@ export interface WordLearningData {
   lastSeen: string;
   wordKnownType: 'UNKNOWN' | 'HALF_KNOWN' | 'KNOWN';
 }
+
+export interface DailyProgress {
+  remainingNum: number;
+  learningNum: number;
+  finishedNum: number;
+}

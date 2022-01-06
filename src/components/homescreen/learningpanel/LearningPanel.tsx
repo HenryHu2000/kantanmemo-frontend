@@ -1,8 +1,9 @@
 import {ReactElement, useEffect, useState} from 'react';
 import {Box, Button, ButtonGroup, CircularProgress, Typography} from '@mui/material';
 import LoadingButton from '@mui/lab/LoadingButton';
+import LinearProgress from '@mui/material/LinearProgress';
 import {BACKEND_URL} from '../../../globals';
-import {WordLearningData} from '../../../types';
+import {DailyProgress, WordLearningData} from '../../../types';
 import './LearningPanel.scss';
 
 enum PanelState {
@@ -15,8 +16,29 @@ const LearningPanel = (): ReactElement => {
   const [isKnown, setIsKnown] = useState<boolean>();
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isTerminated, setIsTerminated] = useState<boolean>(false);
+  const [progressRatio, setProgressRatio] = useState<number>(0);
 
-  const updateWord = (word: WordLearningData) => {
+  const updateProgress = () => {
+    fetch(
+      BACKEND_URL + '/learning/progress',
+      {
+        method: 'GET',
+        credentials: 'include'
+      }
+    )
+      .then((response) => response.json())
+      .then((result: DailyProgress) => {
+        const total = result.remainingNum + result.learningNum + result.finishedNum;
+        if (total !== 0) {
+          setProgressRatio(result.finishedNum / total);
+        }
+      })
+      .catch((error) => {
+        console.error('Error:', error);
+      });
+  };
+
+  const setWordAndUpdatePanel = (word: WordLearningData) => {
     setCurrentWord(word);
     if (word.wordKnownType === 'UNKNOWN') {
       setPanelState(PanelState.HINT);
@@ -41,13 +63,14 @@ const LearningPanel = (): ReactElement => {
         .then((response) => {
           response.json()
             .then((result: WordLearningData) => {
-              updateWord(result);
+              setWordAndUpdatePanel(result);
               setIsLoading(false);
             })
             .catch(() => {
               setIsTerminated(true);
               setIsLoading(false);
             });
+          updateProgress();
         })
         .catch((error) => {
           console.error('Error:', error);
@@ -67,7 +90,7 @@ const LearningPanel = (): ReactElement => {
       .then((response) => {
         response.json()
           .then((result: WordLearningData) => {
-            updateWord(result);
+            setWordAndUpdatePanel(result);
           })
           .catch(() => {
             setIsTerminated(true);
@@ -76,6 +99,10 @@ const LearningPanel = (): ReactElement => {
       .catch((error) => {
         console.error('Error:', error);
       });
+  }, []);
+
+  useEffect(() => {
+    updateProgress();
   }, []);
 
   return (
@@ -92,6 +119,7 @@ const LearningPanel = (): ReactElement => {
           (currentWord 
             ? (
               <>
+                <LinearProgress variant="determinate" className="progress-bar" value={progressRatio * 100} />
                 <div className="word-texts">
                   <Typography component="h2" variant="h4">
                     {currentWord.word.name}
@@ -111,6 +139,7 @@ const LearningPanel = (): ReactElement => {
                     key="known"
                     size="large"
                     variant="outlined"
+                    color="success"
                     disabled={panelState === PanelState.ANSWER}
                     onClick={() => {
                       if (isKnown === undefined) {
@@ -125,6 +154,7 @@ const LearningPanel = (): ReactElement => {
                     key="unknown"
                     size="large"
                     variant="outlined"
+                    color="error"
                     disabled={panelState === PanelState.ANSWER}
                     onClick={() => {
                       setIsKnown(false);
@@ -140,7 +170,7 @@ const LearningPanel = (): ReactElement => {
                   <LoadingButton 
                     key="next"
                     size="large"
-                    variant="outlined"
+                    variant="contained"
                     disabled={panelState !== PanelState.ANSWER}
                     onClick={() => {
                       handleProceed();

@@ -1,7 +1,12 @@
 .LearningPanel {
   .word-texts {
-    height: 135px;
+    height: 125px;
     margin: 15px 0;
     text-align: center;
+  }
+
+  .progress-bar {
+    width: 100%;
+    top: -30px;
   }
 }
