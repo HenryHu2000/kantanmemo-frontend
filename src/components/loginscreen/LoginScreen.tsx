@@ -1,8 +1,8 @@
-import {Link, Container, CssBaseline, Box, Typography, TextField, Button, Grid} from '@mui/material';
+import {Link, Container, CssBaseline, Box, Typography, TextField, Button, Grid, Alert, Collapse} from '@mui/material';
 import {ReactElement, useState} from 'react';
 import {BACKEND_URL} from '../../globals';
 
-const LoginScreen = (props: {login: (userId: number) => void}): ReactElement => {
+const LoginScreen = (props: {login: (userId: number) => void; isLoginSuccessful?: boolean}): ReactElement => {
   const [isRegistering, setIsRegistering] = useState<boolean>(false);
   const [userNameText, setUserNameText] = useState<string>('');
   const [userIdText, setUserIdText] = useState<string>('');
@@ -76,6 +76,14 @@ const LoginScreen = (props: {login: (userId: number) => void}): ReactElement => 
                 }}
               />
             }
+            <Collapse in={props.isLoginSuccessful === false}>
+              <Alert
+                severity="error"
+                sx={{mb: 2}}
+              >
+                Error: Sign-in failed
+              </Alert>
+            </Collapse>
             <Button
               type="submit"
               fullWidth

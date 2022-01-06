@@ -10,6 +10,8 @@ import {User} from './types';
 const App = (): ReactElement => {
   const [cookies, setCookie, removeCookie] = useCookies(['user_id']);
   const [user, setUser] = useState<User>();
+  const [isLoginSuccessful, setIsLoginSuccessful] = useState<boolean>();
+
   const cookieSetOptions: CookieSetOptions 
     = useMemo<CookieSetOptions>(() => ({domain: COOKIE_DOMAIN, sameSite: 'lax'}), []);
   const updateUser = useCallback(() => {
@@ -24,11 +26,13 @@ const App = (): ReactElement => {
         .then((response) => response.json())
         .then((result: User) => {
           setUser(result);
+          setIsLoginSuccessful(true);
         })
         .catch((error) => {
           console.error('Error:', error);
           removeCookie('user_id', cookieSetOptions);
           setUser(undefined);
+          setIsLoginSuccessful(false);
         });
     }
   }, [cookieSetOptions, cookies.user_id, removeCookie]);
@@ -51,7 +55,7 @@ const App = (): ReactElement => {
     <div className="App">
       {user
         ? (<HomeScreen user={user} setUser={setUser} logout={logout}/>)
-        : (<LoginScreen login={login}/>)
+        : (<LoginScreen login={login} isLoginSuccessful={isLoginSuccessful}/>)
       }
     </div>
   );

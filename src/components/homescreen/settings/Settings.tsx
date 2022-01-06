@@ -48,6 +48,7 @@ const Settings = (props: {userSettings?: UserSettings; setUserSettings: (userSet
   }, [props]);
 
   const handleChangeUserSettings = (newUserSettings: UserSettings) => {
+    props.setUserSettings(newUserSettings);
     fetch(
       BACKEND_URL + '/user/settings/edit',
       {
@@ -62,7 +63,6 @@ const Settings = (props: {userSettings?: UserSettings; setUserSettings: (userSet
       .then((response) => response.json())
       .then((result: UserSettings) => {
         console.log('Success:', result);
-        props.setUserSettings(result);
       })
       .catch((error) => {
         console.error('Error:', error);

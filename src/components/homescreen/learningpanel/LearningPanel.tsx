@@ -1,5 +1,6 @@
-import {Box, Button, ButtonGroup, Typography} from '@mui/material';
 import {ReactElement, useEffect, useState} from 'react';
+import {Box, Button, ButtonGroup, Typography} from '@mui/material';
+import LoadingButton from '@mui/lab/LoadingButton';
 import {BACKEND_URL} from '../../../globals';
 import {WordLearningData} from '../../../types';
 import './LearningPanel.scss';
@@ -12,6 +13,7 @@ const LearningPanel = (): ReactElement => {
   const [currentWord, setCurrentWord] = useState<WordLearningData>();
   const [panelState, setPanelState] = useState<PanelState>(PanelState.QUESTION);
   const [isKnown, setIsKnown] = useState<boolean>();
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   
   useEffect(() => {
     fetch(
@@ -33,6 +35,7 @@ const LearningPanel = (): ReactElement => {
   const handleProceed = () => {
     if (isKnown !== undefined) {
       const data = new URLSearchParams([['is_known', String(isKnown)]]);
+      setIsLoading(true);
       fetch(
         BACKEND_URL + '/learning/proceed',
         {
@@ -55,9 +58,11 @@ const LearningPanel = (): ReactElement => {
             .catch(() => {
               setCurrentWord(undefined);
             });
+          setIsLoading(false);
         })
         .catch((error) => {
           console.error('Error:', error);
+          setIsLoading(false);
         });
     }
   };
@@ -93,6 +98,7 @@ const LearningPanel = (): ReactElement => {
                 <Button 
                   key="known"
                   size="large"
+                  variant="outlined"
                   disabled={panelState === PanelState.ANSWER}
                   onClick={() => {
                     if (isKnown === undefined) {
@@ -106,6 +112,7 @@ const LearningPanel = (): ReactElement => {
                 <Button 
                   key="unknown"
                   size="large"
+                  variant="outlined"
                   disabled={panelState === PanelState.ANSWER}
                   onClick={() => {
                     setIsKnown(false);
@@ -118,16 +125,18 @@ const LearningPanel = (): ReactElement => {
                 >
                   I don't know
                 </Button>
-                <Button 
+                <LoadingButton 
                   key="next"
                   size="large"
+                  variant="outlined"
                   disabled={panelState !== PanelState.ANSWER}
                   onClick={() => {
                     handleProceed();
                   }}
+                  loading={isLoading}
                 >
                   Next
-                </Button>
+                </LoadingButton>
               </ButtonGroup>
             </>
           )
