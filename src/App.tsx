@@ -54,7 +54,7 @@ const App = (): ReactElement => {
   return (
     <div className="App">
       {user
-        ? (<HomeScreen user={user} setUser={setUser} logout={logout}/>)
+        ? (<HomeScreen user={user} updateUser={updateUser} logout={logout}/>)
         : (<LoginScreen login={login} isLoginSuccessful={isLoginSuccessful}/>)
       }
     </div>

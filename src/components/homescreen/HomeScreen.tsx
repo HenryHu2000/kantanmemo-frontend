@@ -1,12 +1,12 @@
 import {AppBar, Container, CssBaseline, Dialog, DialogContent, DialogTitle, Divider, IconButton, Menu, MenuItem, Toolbar, Typography} from '@mui/material';
 import React, {ReactElement, useEffect, useState} from 'react';
 import Settings from './settings/Settings';
-import {User, UserSettings} from '../../types';
+import {User} from '../../types';
 import LearningPanel from './learningpanel/LearningPanel';
 import './HomeScreen.scss';
 import MoreIcon from '@mui/icons-material/MoreVert';
 
-const HomeScreen = (props: {user: User; setUser: (user?: User) => void; logout: () => void}): ReactElement => {
+const HomeScreen = (props: {user: User; updateUser: () => void; logout: () => void}): ReactElement => {
   const [isSettingsOpen, setIsSettingsOpen] = useState<boolean>(false);
   const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement>();
   const handleClose = () => {
@@ -72,9 +72,7 @@ const HomeScreen = (props: {user: User; setUser: (user?: User) => void; logout: 
       }}>
         <DialogTitle>Settings</DialogTitle>
         <DialogContent>
-          <Settings userSettings={props.user.userSettings ?? undefined} setUserSettings={(userSettings?: UserSettings) => {
-            props.setUser({...props.user, userSettings: userSettings ?? null});
-          }}/>
+          <Settings updateUser={props.updateUser}/>
         </DialogContent>
       </Dialog>
       <Container component="main" maxWidth="xs">
