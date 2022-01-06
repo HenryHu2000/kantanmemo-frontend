@@ -13,7 +13,6 @@ const Settings = (props: {updateUser: () => void}): ReactElement => {
   const [userSettings, setUserSettings] = useState<UserSettings>();
   const defaultUserSettings: UserSettings 
     = {dailyNewWordNum: DEFAULT_DAILY_NEW_WORD_NUM, dailyRevisingWordNum: DEFAULT_DAILY_REVISING_WORD_NUM};
-  const updateUser = props.updateUser;
 
   const updateWordlists = () => {
     fetch(
@@ -43,12 +42,11 @@ const Settings = (props: {updateUser: () => void}): ReactElement => {
       .then((response) => response.json())
       .then((result: UserSettings) => {
         setUserSettings(result);
-        updateUser();
       })
       .catch((error) => {
         console.error('Error:', error);
       });
-  }, [updateUser]);
+  }, []);
 
   const handleChangeUserSettings = (newUserSettings: UserSettings) => {
     setUserSettings(newUserSettings);
@@ -66,6 +64,7 @@ const Settings = (props: {updateUser: () => void}): ReactElement => {
       .then((response) => response.json())
       .then((result: UserSettings) => {
         console.log('Success:', result);
+        props.updateUser();
       })
       .catch((error) => {
         console.error('Error:', error);

@@ -1,6 +1,7 @@
 import {Link, Container, CssBaseline, Box, Typography, TextField, Button, Grid, Alert, Collapse} from '@mui/material';
 import {ReactElement, useState} from 'react';
 import {BACKEND_URL} from '../../globals';
+import './LoginScreen.scss';
 
 const LoginScreen = (props: {login: (userId: number) => void; isLoginSuccessful?: boolean}): ReactElement => {
   const [isRegistering, setIsRegistering] = useState<boolean>(false);
@@ -50,59 +51,65 @@ const LoginScreen = (props: {login: (userId: number) => void; isLoginSuccessful?
             {isRegistering ? 'Sign up' : 'Sign in'}
           </Typography>
           <Box component="form" onSubmit={handleSubmit} noValidate sx={{mt: 1}}>
-            {isRegistering 
-              ? <TextField
-                name="name"
-                required
+            <div className="login-form">
+              {isRegistering 
+                ? (
+                  <TextField
+                    name="name"
+                    required
+                    fullWidth
+                    id="name"
+                    label="Name"
+                    autoFocus
+                    value={userNameText}
+                    onChange={(e) => {
+                      setUserNameText(e.target.value);
+                    }}
+                  />
+                )
+                : (
+                  <>
+                    <TextField
+                      name="user_id"
+                      required
+                      fullWidth
+                      id="user_id"
+                      label="User ID"
+                      autoFocus
+                      value={userIdText}
+                      onChange={(e) => {
+                        setUserIdText(e.target.value);
+                      }}
+                    />
+                    <Collapse in={props.isLoginSuccessful === false}>
+                      <Alert
+                        severity="error"
+                        sx={{mb: 2}}
+                      >
+                        Error: Sign-in failed
+                      </Alert>
+                    </Collapse>
+                  </>
+                )
+              }
+              <Button
+                type="submit"
                 fullWidth
-                id="name"
-                label="Name"
-                autoFocus
-                value={userNameText}
-                onChange={(e) => {
-                  setUserNameText(e.target.value);
-                }}
-              />
-              : <>
-                <TextField
-                  name="user_id"
-                  required
-                  fullWidth
-                  id="user_id"
-                  label="User ID"
-                  autoFocus
-                  value={userIdText}
-                  onChange={(e) => {
-                    setUserIdText(e.target.value);
-                  }}
-                />
-                <Collapse in={props.isLoginSuccessful === false}>
-                  <Alert
-                    severity="error"
-                    sx={{mb: 2}}
-                  >
-                    Error: Sign-in failed
-                  </Alert>
-                </Collapse>
-              </>
-            }
-            <Button
-              type="submit"
-              fullWidth
-              variant="contained"
-              sx={{mt: 3, mb: 2}}
-            >
-              {isRegistering ? 'Sign Up' : 'Sign In'}
-            </Button>
-            <Grid container justifyContent="flex-end">
-              <Grid item>
-                <Link href="#" variant="body2" onClick={() => {
-                  setIsRegistering(!isRegistering);
-                }}>
-                  {isRegistering ? 'Already have an account? Sign in' : 'Don\'t have an account? Sign Up'}
-                </Link>
+                variant="contained"
+                sx={{mt: 3, mb: 2}}
+              >
+                {isRegistering ? 'Sign Up' : 'Sign In'}
+              </Button>
+              <Grid container justifyContent="flex-end">
+                <Grid item>
+                  <Link href="#" variant="body2" onClick={() => {
+                    setIsRegistering(!isRegistering);
+                  }}>
+                    {isRegistering ? 'Already have an account? Sign in' : 'Don\'t have an account? Sign Up'}
+                  </Link>
+                </Grid>
               </Grid>
-            </Grid>
+            </div>
           </Box>
         </Box>
       </Container>
