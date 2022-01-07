@@ -11,11 +11,13 @@ const App = (): ReactElement => {
   const [cookies, setCookie, removeCookie] = useCookies(['user_id']);
   const [user, setUser] = useState<User>();
   const [isLoginSuccessful, setIsLoginSuccessful] = useState<boolean>();
+  const [isLoginLoading, setIsLoginLoading] = useState<boolean>(false);
 
   const cookieSetOptions: CookieSetOptions 
     = useMemo<CookieSetOptions>(() => ({domain: COOKIE_DOMAIN, sameSite: 'lax'}), []);
   const updateUser = useCallback(() => {
     if (cookies.user_id) {
+      setIsLoginLoading(true);
       fetch(
         BACKEND_URL + '/user/me',
         {
@@ -27,12 +29,14 @@ const App = (): ReactElement => {
         .then((result: User) => {
           setUser(result);
           setIsLoginSuccessful(true);
+          setIsLoginLoading(false);
         })
         .catch((error) => {
           console.error('Error:', error);
           removeCookie('user_id', cookieSetOptions);
           setUser(undefined);
           setIsLoginSuccessful(false);
+          setIsLoginLoading(false);
         });
     }
   }, [cookieSetOptions, cookies.user_id, removeCookie]);
@@ -55,7 +59,7 @@ const App = (): ReactElement => {
     <div className="App">
       {user
         ? (<HomeScreen user={user} updateUser={updateUser} logout={logout}/>)
-        : (<LoginScreen login={login} isLoginSuccessful={isLoginSuccessful}/>)
+        : (<LoginScreen login={login} isLoginSuccessful={isLoginSuccessful} isLoginLoading={isLoginLoading}/>)
       }
     </div>
   );

@@ -1,17 +1,23 @@
-import {Link, Container, CssBaseline, Box, Typography, TextField, Button, Grid, Alert, Collapse} from '@mui/material';
+import {LoadingButton} from '@mui/lab';
+import {Link, Container, CssBaseline, Box, Typography, TextField, Grid, Alert, Collapse} from '@mui/material';
 import {ReactElement, useState} from 'react';
 import {BACKEND_URL} from '../../globals';
 import './LoginScreen.scss';
 
-const LoginScreen = (props: {login: (userId: number) => void; isLoginSuccessful?: boolean}): ReactElement => {
+const LoginScreen = (props: {login: (userId: number) => void; isLoginSuccessful?: boolean; isLoginLoading: boolean}): ReactElement => {
   const [isRegistering, setIsRegistering] = useState<boolean>(false);
   const [userNameText, setUserNameText] = useState<string>('');
   const [userIdText, setUserIdText] = useState<string>('');
+  const [isRegisterSuccessful, setIsRegisterSuccessful] = useState<boolean>();
+  const [isRegisterLoading, setIsRegisterLoading] = useState<boolean>(false);
+  const isLoginSuccessful = props.isLoginSuccessful;
+  const isLoginLoading = props.isLoginLoading;
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (isRegistering) {
       if (userNameText !== '') {
+        setIsRegisterLoading(true);
         const data = new URLSearchParams([['user_name', userNameText]]);
         fetch(
           BACKEND_URL + '/user/register',
@@ -21,12 +27,22 @@ const LoginScreen = (props: {login: (userId: number) => void; isLoginSuccessful?
             credentials: 'include'
           }
         )
-          .then((response) => response.text())
-          .then((result) => {
-            props.login(Number(result));
-          })        
+          .then((response) => {
+            if (response.ok) {
+              setIsRegisterSuccessful(true);
+              response.text()
+                .then((result) => {
+                  props.login(Number(result));
+                });
+            } else {
+              setIsRegisterSuccessful(false);
+            }
+            setIsRegisterLoading(false);
+          })
           .catch((error) => {
             console.error('Error:', error);
+            setIsRegisterSuccessful(false);
+            setIsRegisterLoading(false);
           });
       }
     } else {
@@ -54,18 +70,28 @@ const LoginScreen = (props: {login: (userId: number) => void; isLoginSuccessful?
             <div className="login-form">
               {isRegistering 
                 ? (
-                  <TextField
-                    name="name"
-                    required
-                    fullWidth
-                    id="name"
-                    label="Name"
-                    autoFocus
-                    value={userNameText}
-                    onChange={(e) => {
-                      setUserNameText(e.target.value);
-                    }}
-                  />
+                  <>
+                    <TextField
+                      name="name"
+                      required
+                      fullWidth
+                      id="name"
+                      label="Name"
+                      autoFocus
+                      value={userNameText}
+                      onChange={(e) => {
+                        setUserNameText(e.target.value);
+                      }}
+                    />
+                    <Collapse in={isRegisterSuccessful === false}>
+                      <Alert
+                        severity="error"
+                        sx={{mb: 2}}
+                      >
+                        Error: Sign-up failed
+                      </Alert>
+                    </Collapse>
+                  </>
                 )
                 : (
                   <>
@@ -81,7 +107,7 @@ const LoginScreen = (props: {login: (userId: number) => void; isLoginSuccessful?
                         setUserIdText(e.target.value);
                       }}
                     />
-                    <Collapse in={props.isLoginSuccessful === false}>
+                    <Collapse in={isLoginSuccessful === false}>
                       <Alert
                         severity="error"
                         sx={{mb: 2}}
@@ -92,14 +118,15 @@ const LoginScreen = (props: {login: (userId: number) => void; isLoginSuccessful?
                   </>
                 )
               }
-              <Button
+              <LoadingButton
                 type="submit"
                 fullWidth
                 variant="contained"
                 sx={{mt: 3, mb: 2}}
+                loading={isRegistering ? isRegisterLoading : isLoginLoading}
               >
                 {isRegistering ? 'Sign Up' : 'Sign In'}
-              </Button>
+              </LoadingButton>
               <Grid container justifyContent="flex-end">
                 <Grid item>
                   <Link href="#" variant="body2" onClick={() => {

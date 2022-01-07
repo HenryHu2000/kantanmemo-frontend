@@ -4,7 +4,7 @@ import {RadioGroup, FormControlLabel, Radio , FormControl, FormLabel, Input, But
 import {Wordlist, UserSettings} from '../../../types';
 import './Settings.scss';
 
-const Settings = (props: {updateUser: () => void}): ReactElement => {
+const Settings = (props: {updateUser: () => void; isSettingsOpen: boolean}): ReactElement => {
   const [selectedFile, setSelectedFile] = useState<File>();
   const changeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSelectedFile(event.target.files?.[0]);
@@ -64,7 +64,9 @@ const Settings = (props: {updateUser: () => void}): ReactElement => {
       .then((response) => response.json())
       .then((result: UserSettings) => {
         console.log('Success:', result);
-        props.updateUser();
+        if (!props.isSettingsOpen) {
+          props.updateUser();        
+        }
       })
       .catch((error) => {
         console.error('Error:', error);

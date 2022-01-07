@@ -131,55 +131,58 @@ const LearningPanel = (): ReactElement => {
                     {panelState === PanelState.ANSWER && currentWord.word.definition}
                   </Typography>
                 </div>
-                <ButtonGroup
-                  orientation="vertical"
-                  aria-label="vertical contained button group"
-                >
-                  <Button 
-                    key="known"
-                    size="large"
-                    variant="outlined"
-                    color="success"
-                    disabled={panelState === PanelState.ANSWER}
-                    onClick={() => {
-                      if (isKnown === undefined) {
-                        setIsKnown(true);
-                      }
-                      setPanelState(PanelState.ANSWER);
-                    }}
+                <div className="learning-button-group">
+                  <ButtonGroup
+                    orientation="vertical"
+                    aria-label="vertical contained button group"
+                    fullWidth
                   >
-                    I know this word
-                  </Button>
-                  <Button 
-                    key="unknown"
-                    size="large"
-                    variant="outlined"
-                    color="error"
-                    disabled={panelState === PanelState.ANSWER}
-                    onClick={() => {
-                      setIsKnown(false);
-                      if (panelState === PanelState.QUESTION) {
-                        setPanelState(PanelState.HINT);
-                      } else {
+                    <Button 
+                      key="known"
+                      size="large"
+                      variant="outlined"
+                      color="success"
+                      disabled={panelState === PanelState.ANSWER}
+                      onClick={() => {
+                        if (isKnown === undefined) {
+                          setIsKnown(true);
+                        }
                         setPanelState(PanelState.ANSWER);
-                      }
-                    }}
-                  >
-                    I don't know
-                  </Button>
-                  <LoadingButton 
-                    key="next"
-                    size="large"
-                    variant="contained"
-                    disabled={panelState !== PanelState.ANSWER}
-                    onClick={() => {
-                      handleProceed();
-                    }}
-                    loading={isLoading}
-                  >
-                    Next
-                  </LoadingButton>
-                </ButtonGroup>
+                      }}
+                    >
+                      I know this word
+                    </Button>
+                    <Button 
+                      key="unknown"
+                      size="large"
+                      variant="outlined"
+                      color="error"
+                      disabled={panelState === PanelState.ANSWER}
+                      onClick={() => {
+                        setIsKnown(false);
+                        if (panelState === PanelState.QUESTION) {
+                          setPanelState(PanelState.HINT);
+                        } else {
+                          setPanelState(PanelState.ANSWER);
+                        }
+                      }}
+                    >
+                      I don't know
+                    </Button>
+                    <LoadingButton 
+                      key="next"
+                      size="large"
+                      variant="contained"
+                      disabled={panelState !== PanelState.ANSWER}
+                      onClick={() => {
+                        handleProceed();
+                      }}
+                      loading={isLoading}
+                    >
+                      Next
+                    </LoadingButton>
+                  </ButtonGroup>
+                </div>
               </>
             )
             : (

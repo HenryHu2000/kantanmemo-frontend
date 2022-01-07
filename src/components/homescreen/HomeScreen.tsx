@@ -69,10 +69,11 @@ const HomeScreen = (props: {user: User; updateUser: () => void; logout: () => vo
 
       <Dialog open={isSettingsOpen} onClose={() => {
         setIsSettingsOpen(false);
+        props.updateUser();
       }}>
         <DialogTitle>Settings</DialogTitle>
         <DialogContent>
-          <Settings updateUser={props.updateUser}/>
+          <Settings updateUser={props.updateUser} isSettingsOpen={isSettingsOpen}/>
         </DialogContent>
       </Dialog>
       <Container component="main" maxWidth="xs">
