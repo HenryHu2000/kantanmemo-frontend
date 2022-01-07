@@ -76,7 +76,7 @@ const HomeScreen = (props: {user: User; updateUser: () => void; logout: () => vo
           <Settings updateUser={props.updateUser} isSettingsOpen={isSettingsOpen}/>
         </DialogContent>
       </Dialog>
-      <Container component="main" maxWidth="xs">
+      <Container component="main" maxWidth="sm">
         <CssBaseline />
         {props.user.userSettings && (
           <LearningPanel />

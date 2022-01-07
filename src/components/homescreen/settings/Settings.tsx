@@ -109,82 +109,86 @@ const Settings = (props: {updateUser: () => void; isSettingsOpen: boolean}): Rea
   
   return (
     <div className="Settings">
-      <div className="daily-goals">
-        <FormControl component="fieldset">
-          <FormLabel component="legend">Daily Goals</FormLabel>
-          <TextField
-            label="New words"
-            type="number"
-            InputLabelProps={{
-              shrink: true
-            }}
-            size="small"
-            margin="normal" 
-            value={userSettings?.dailyNewWordNum ?? DEFAULT_DAILY_NEW_WORD_NUM}
-            onChange={(event) => {
-              if (userSettings) {
-                handleChangeUserSettings({...userSettings, dailyNewWordNum: Number(event.currentTarget.value)});
-              } else {
-                handleChangeUserSettings({...defaultUserSettings, dailyNewWordNum: Number(event.currentTarget.value)});                
-              }
-            }}
-          />
-          <TextField
-            label="Revising words"
-            type="number"
-            InputLabelProps={{
-              shrink: true
-            }}
-            size="small"
-            margin="normal" 
-            value={userSettings?.dailyRevisingWordNum ?? DEFAULT_DAILY_REVISING_WORD_NUM}
-            onChange={(event) => {
-              if (userSettings) {
-                handleChangeUserSettings({...userSettings, dailyRevisingWordNum: Number(event.currentTarget.value)});
-              } else {
-                handleChangeUserSettings({...defaultUserSettings, dailyRevisingWordNum: Number(event.currentTarget.value)});                
-              }
-            }}
-          />
-        </FormControl>
+      <div className="settings-block">
+        <div className="daily-goals">
+          <FormControl component="fieldset">
+            <FormLabel component="legend">Daily Goals</FormLabel>
+            <TextField
+              label="New words"
+              type="number"
+              InputLabelProps={{
+                shrink: true
+              }}
+              size="small"
+              margin="normal" 
+              value={userSettings?.dailyNewWordNum ?? DEFAULT_DAILY_NEW_WORD_NUM}
+              onChange={(event) => {
+                if (userSettings) {
+                  handleChangeUserSettings({...userSettings, dailyNewWordNum: Number(event.currentTarget.value)});
+                } else {
+                  handleChangeUserSettings({...defaultUserSettings, dailyNewWordNum: Number(event.currentTarget.value)});                
+                }
+              }}
+            />
+            <TextField
+              label="Revising words"
+              type="number"
+              InputLabelProps={{
+                shrink: true
+              }}
+              size="small"
+              margin="normal" 
+              value={userSettings?.dailyRevisingWordNum ?? DEFAULT_DAILY_REVISING_WORD_NUM}
+              onChange={(event) => {
+                if (userSettings) {
+                  handleChangeUserSettings({...userSettings, dailyRevisingWordNum: Number(event.currentTarget.value)});
+                } else {
+                  handleChangeUserSettings({...defaultUserSettings, dailyRevisingWordNum: Number(event.currentTarget.value)});                
+                }
+              }}
+            />
+          </FormControl>
+        </div>
       </div>
-      <div className="wordlist-selection">
-        <FormControl component="fieldset">
-          <FormLabel component="legend">Word Lists</FormLabel>
-          <RadioGroup
-            aria-label="wordlist"
-            name="radio-buttons-group"
-            value={userSettings?.currentWordlistId ?? -1}
-            onChange={(event) => {
-              if (userSettings) {
-                handleChangeUserSettings({...userSettings, currentWordlistId: Number(event.currentTarget.value)});
-              } else {
-                handleChangeUserSettings({...defaultUserSettings, currentWordlistId: Number(event.currentTarget.value)});                
-              }
-            }}
-          >
-            {wordlists?.map((wordlist) => 
-              (<FormControlLabel 
-                key={wordlist.id} 
-                value={wordlist.id} 
-                control={<Radio />} 
-                label={wordlist.name} 
-              />)
-            )}
-          </RadioGroup>
-        </FormControl>
-      </div>
-      <div className="wordlist-upload">
-        <Input type="file" name="file" onChange={changeHandler} />
-        {selectedFile ? (
+      <div className="settings-block">
+        <div className="wordlist-selection">
+          <FormControl component="fieldset">
+            <FormLabel component="legend">Word Lists</FormLabel>
+            <RadioGroup
+              aria-label="wordlist"
+              name="radio-buttons-group"
+              value={userSettings?.currentWordlistId ?? -1}
+              onChange={(event) => {
+                if (userSettings) {
+                  handleChangeUserSettings({...userSettings, currentWordlistId: Number(event.currentTarget.value)});
+                } else {
+                  handleChangeUserSettings({...defaultUserSettings, currentWordlistId: Number(event.currentTarget.value)});                
+                }
+              }}
+            >
+              {wordlists?.map((wordlist) => 
+                (<FormControlLabel 
+                  key={wordlist.id} 
+                  value={wordlist.id} 
+                  control={<Radio />} 
+                  label={wordlist.name} 
+                />)
+              )}
+            </RadioGroup>
+          </FormControl>
+        </div>
+        <div className="wordlist-upload">
+          <Input type="file" name="file" onChange={changeHandler} />
+          {selectedFile ? (
+            <div>
+              <p>File size: {selectedFile.size.toLocaleString()} bytes</p>
+            </div>
+          ) : (
+            <p>Select a wordlist CSV file to upload</p>
+          )}
           <div>
-            <p>File size: {selectedFile.size.toLocaleString()} bytes</p>
+            <Button variant="contained" onClick={handleUpload}>Upload</Button>
           </div>
-        ) : (
-          <p>Select a wordlist CSV file to upload</p>
-        )}
-        <div>
-          <Button variant="contained" onClick={handleUpload}>Upload</Button>
         </div>
       </div>
     </div>

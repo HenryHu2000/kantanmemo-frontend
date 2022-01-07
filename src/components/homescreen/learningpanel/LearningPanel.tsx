@@ -1,5 +1,5 @@
 import {ReactElement, useEffect, useState} from 'react';
-import {Box, Button, ButtonGroup, CircularProgress, Typography} from '@mui/material';
+import {Box, Button, ButtonGroup, CircularProgress, Container, Typography} from '@mui/material';
 import LoadingButton from '@mui/lab/LoadingButton';
 import LinearProgress from '@mui/material/LinearProgress';
 import {BACKEND_URL} from '../../../globals';
@@ -131,7 +131,7 @@ const LearningPanel = (): ReactElement => {
                     {panelState === PanelState.ANSWER && currentWord.word.definition}
                   </Typography>
                 </div>
-                <div className="learning-button-group">
+                <Container className="learning-button-group" maxWidth="sm">
                   <ButtonGroup
                     orientation="vertical"
                     aria-label="vertical contained button group"
@@ -182,7 +182,7 @@ const LearningPanel = (): ReactElement => {
                       Next
                     </LoadingButton>
                   </ButtonGroup>
-                </div>
+                </Container>
               </>
             )
             : (
