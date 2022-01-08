@@ -1,5 +1,6 @@
-import {ReactElement, useEffect, useState} from 'react';
+import {ReactElement, useCallback, useEffect, useState} from 'react';
 import {Box, Button, ButtonGroup, CircularProgress, Container, Typography} from '@mui/material';
+import Link from '@mui/material/Link';
 import LoadingButton from '@mui/lab/LoadingButton';
 import LinearProgress from '@mui/material/LinearProgress';
 import {BACKEND_URL} from '../../../globals';
@@ -48,6 +49,29 @@ const LearningPanel = (): ReactElement => {
     setIsKnown(undefined);
   };
 
+  const updateCurrentWord = useCallback(() => {
+    fetch(
+      BACKEND_URL + '/learning/current',
+      {
+        method: 'GET',
+        credentials: 'include'
+      }
+    )
+      .then((response) => {
+        response.json()
+          .then((result: WordLearningData) => {
+            setWordAndUpdatePanel(result);
+          })
+          .catch(() => {
+            setIsTerminated(true);
+          });
+        updateProgress();
+      })
+      .catch((error) => {
+        console.error('Error:', error);
+      });
+  }, []);
+
   const handleProceed = () => {
     if (isKnown !== undefined) {
       const data = new URLSearchParams([['is_known', String(isKnown)]]);
@@ -78,28 +102,29 @@ const LearningPanel = (): ReactElement => {
         });
     }
   };
-    
-  useEffect(() => {
+  
+  const handleResetLearningProcess = () => {
     fetch(
-      BACKEND_URL + '/learning/current',
+      BACKEND_URL + '/learning/reset',
       {
-        method: 'GET',
+        method: 'POST',
         credentials: 'include'
       }
     )
-      .then((response) => {
-        response.json()
-          .then((result: WordLearningData) => {
-            setWordAndUpdatePanel(result);
-          })
-          .catch(() => {
-            setIsTerminated(true);
-          });
+      .then((response) => response.json())
+      .then(() => {
+        setCurrentWord(undefined);
+        setIsTerminated(false);
+        updateCurrentWord();
       })
       .catch((error) => {
         console.error('Error:', error);
       });
-  }, []);
+  };
+
+  useEffect(() => {
+    updateCurrentWord();
+  }, [updateCurrentWord]);
 
   useEffect(() => {
     updateProgress();
@@ -190,9 +215,18 @@ const LearningPanel = (): ReactElement => {
             )
           )
           : (
-            <Typography component="h2" variant="h5" color="text.secondary">
-              You've done your daily goal!
-            </Typography>
+            <div className="finish-message">
+              <Typography component="h2" variant="h5" color="text.secondary">
+                You've done your daily goal!
+              </Typography>
+              <Typography component="h3" variant="h6" color="text.secondary">
+                <Link href="#" underline="hover" onClick={() => {
+                  handleResetLearningProcess();
+                }}>
+                  Learn More Words
+                </Link>
+              </Typography>
+            </div>
           )
         }
       </Box>

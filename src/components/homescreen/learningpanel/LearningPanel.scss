@@ -16,4 +16,11 @@
       font-size: large;
     }
   }
+
+  .finish-message {
+    text-align: center;
+    &> :not(:last-child) {
+      margin-bottom: 15px;
+    }
+  }
 }
