@@ -56,12 +56,7 @@ const LoginScreen = (props: {login: (userId: number) => void; isLoginSuccessful?
       <Container component="main" maxWidth="xs">
         <CssBaseline />
         <Box
-          sx={{
-            marginTop: 8,
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center'
-          }}
+          className="panel"
         >
           <Typography component="h1" variant="h5">
             {isRegistering ? 'Sign up' : 'Sign in'}

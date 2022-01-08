@@ -1,4 +1,4 @@
-import {AppBar, Container, CssBaseline, Dialog, DialogContent, DialogTitle, Divider, IconButton, Menu, MenuItem, Toolbar, Typography} from '@mui/material';
+import {AppBar, Box, Container, CssBaseline, Dialog, DialogContent, DialogTitle, Divider, IconButton, Link, Menu, MenuItem, Toolbar, Typography} from '@mui/material';
 import React, {ReactElement, useEffect, useState} from 'react';
 import Settings from './settings/Settings';
 import {User} from '../../types';
@@ -78,9 +78,24 @@ const HomeScreen = (props: {user: User; updateUser: () => void; logout: () => vo
       </Dialog>
       <Container component="main" maxWidth="sm">
         <CssBaseline />
-        {props.user.userSettings && (
-          <LearningPanel />
-        )}
+        {props.user.userSettings 
+          ? (
+            <LearningPanel />
+          )
+          : !isSettingsOpen && (
+            <Box
+              className="panel"
+            >
+              <Typography component="h2" variant="h6" color="text.secondary">
+                <Link href="#" underline="hover" onClick={() => {
+                  setIsSettingsOpen(true);
+                }}>
+                  Pick a Word List to Start
+                </Link>
+              </Typography>
+            </Box>
+          )
+        }
       </Container>
     </div>
   );
