@@ -12,5 +12,8 @@
   .learning-button-group {
     position: fixed;
     bottom: 30px;
+    button {
+      font-size: large;
+    }
   }
 }
