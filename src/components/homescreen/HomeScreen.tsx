@@ -79,7 +79,7 @@ const HomeScreen = (props: {user: User; updateUser: () => void; logout: () => vo
           Settings
           <Fade in={isSettingsSaved}>
             <Typography display="inline" color="success.main" sx={{
-              margin: [0, 1]
+              margin: 1
             }}>
               <CheckCircleOutlineIcon fontSize="inherit" color="inherit" sx={{
                 position: 'relative',

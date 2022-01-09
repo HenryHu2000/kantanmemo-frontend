@@ -106,9 +106,9 @@ const LearningPanel = (): ReactElement => {
     }
   };
   
-  const handleResetLearningProcess = () => {
+  const handleLearnMore = () => {
     fetch(
-      BACKEND_URL + '/learning/reset',
+      BACKEND_URL + '/learning/more',
       {
         method: 'POST',
         credentials: 'include'
@@ -264,7 +264,7 @@ const LearningPanel = (): ReactElement => {
               </Typography>
               <Typography component="h3" variant="h6" color="text.secondary">
                 <Link href="#" underline="hover" onClick={() => {
-                  handleResetLearningProcess();
+                  handleLearnMore();
                 }}>
                   Learn More Words
                 </Link>
