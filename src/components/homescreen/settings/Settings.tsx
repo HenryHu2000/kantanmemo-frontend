@@ -4,7 +4,7 @@ import {RadioGroup, FormControlLabel, Radio , FormControl, FormLabel, Input, But
 import {Wordlist, UserSettings} from '../../../types';
 import './Settings.scss';
 
-const Settings = (props: {updateUser: () => void; isSettingsOpen: boolean}): ReactElement => {
+const Settings = (props: {updateUser: () => void; isSettingsOpen: boolean; setIsSettingsSaved: (isSettingsSaved: boolean) => void}): ReactElement => {
   const [selectedFile, setSelectedFile] = useState<File>();
   const changeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSelectedFile(event.target.files?.[0]);
@@ -13,6 +13,21 @@ const Settings = (props: {updateUser: () => void; isSettingsOpen: boolean}): Rea
   const [userSettings, setUserSettings] = useState<UserSettings>();
   const defaultUserSettings: UserSettings 
     = {dailyNewWordNum: DEFAULT_DAILY_NEW_WORD_NUM, dailyRevisingWordNum: DEFAULT_DAILY_REVISING_WORD_NUM};
+  const [timeoutId, setTimeoutId] = useState<NodeJS.Timeout>();
+
+  const handleShowSaved = () => {
+    props.setIsSettingsSaved(true);
+    if (timeoutId) {
+      clearTimeout(timeoutId);
+    }
+    setTimeoutId(setTimeout(() => {
+      props.setIsSettingsSaved(false);
+    }, 2000));
+  };
+
+  const handleHideSaved = () => {
+    props.setIsSettingsSaved(false);
+  };
 
   const updateWordlists = () => {
     fetch(
@@ -49,6 +64,7 @@ const Settings = (props: {updateUser: () => void; isSettingsOpen: boolean}): Rea
   }, []);
 
   const handleChangeUserSettings = (newUserSettings: UserSettings) => {
+    handleHideSaved();
     setUserSettings(newUserSettings);
     fetch(
       BACKEND_URL + '/user/settings/edit',
@@ -64,6 +80,7 @@ const Settings = (props: {updateUser: () => void; isSettingsOpen: boolean}): Rea
       .then((response) => response.json())
       .then((result: UserSettings) => {
         console.log('Success:', result);
+        handleShowSaved();
         if (!props.isSettingsOpen) {
           props.updateUser();        
         }

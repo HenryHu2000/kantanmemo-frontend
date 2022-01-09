@@ -1,7 +1,8 @@
-import {AppBar, Box, Container, CssBaseline, Dialog, DialogContent, DialogTitle, Divider, IconButton, Link, Menu, MenuItem, Toolbar, Typography} from '@mui/material';
+import {AppBar, Box, Container, CssBaseline, Dialog, DialogContent, DialogTitle, Divider, Fade, IconButton, Link, Menu, MenuItem, Toolbar, Typography} from '@mui/material';
 import React, {ReactElement, useEffect, useState} from 'react';
 import MoreIcon from '@mui/icons-material/MoreVert';
 import CloseIcon from '@mui/icons-material/Close';
+import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import Settings from './settings/Settings';
 import {User} from '../../types';
 import LearningPanel from './learningpanel/LearningPanel';
@@ -10,6 +11,7 @@ import './HomeScreen.scss';
 const HomeScreen = (props: {user: User; updateUser: () => void; logout: () => void}): ReactElement => {
   const [isSettingsOpen, setIsSettingsOpen] = useState<boolean>(false);
   const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement>();
+  const [isSettingsSaved, setIsSettingsSaved] = useState<boolean>(false);
   const handleCloseMenu = () => {
     setAnchorEl(undefined);
   };
@@ -75,6 +77,17 @@ const HomeScreen = (props: {user: User; updateUser: () => void; logout: () => vo
       <Dialog open={isSettingsOpen} onClose={handleCloseSettings}>
         <DialogTitle>
           Settings
+          <Fade in={isSettingsSaved}>
+            <Typography display="inline" color="success.main" sx={{
+              margin: [0, 1]
+            }}>
+              <CheckCircleOutlineIcon fontSize="inherit" color="inherit" sx={{
+                position: 'relative',
+                top: 2
+              }}/>
+              Saved
+            </Typography>
+          </Fade>
           <IconButton
             aria-label="close"
             onClick={handleCloseSettings}
@@ -89,7 +102,7 @@ const HomeScreen = (props: {user: User; updateUser: () => void; logout: () => vo
           </IconButton>
         </DialogTitle>
         <DialogContent>
-          <Settings updateUser={props.updateUser} isSettingsOpen={isSettingsOpen}/>
+          <Settings updateUser={props.updateUser} isSettingsOpen={isSettingsOpen} setIsSettingsSaved={setIsSettingsSaved}/>
         </DialogContent>
       </Dialog>
       <Container component="main" maxWidth="sm">
