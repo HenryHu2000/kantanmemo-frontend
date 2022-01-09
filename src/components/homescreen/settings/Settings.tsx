@@ -41,8 +41,8 @@ const Settings = (props: {updateUser: () => void; isSettingsOpen: boolean; setIs
       .then((result) => {
         setWordlists(result);
       })        
-      .catch((error) => {
-        console.error('Error:', error);
+      .catch(() => {
+        // Do nothing
       });
   };
 
@@ -58,8 +58,8 @@ const Settings = (props: {updateUser: () => void; isSettingsOpen: boolean; setIs
       .then((result: UserSettings) => {
         setUserSettings(result);
       })
-      .catch((error) => {
-        console.error('Error:', error);
+      .catch(() => {
+        // Do nothing
       });
   }, []);
 
@@ -85,8 +85,8 @@ const Settings = (props: {updateUser: () => void; isSettingsOpen: boolean; setIs
           props.updateUser();        
         }
       })
-      .catch((error) => {
-        console.error('Error:', error);
+      .catch(() => {
+        // Do nothing
       });
   };
 
@@ -110,8 +110,8 @@ const Settings = (props: {updateUser: () => void; isSettingsOpen: boolean; setIs
           console.log('Success:', result);
           updateWordlists();
         })
-        .catch((error) => {
-          console.error('Error:', error);
+        .catch(() => {
+          // Do nothing
         });
     }
   };

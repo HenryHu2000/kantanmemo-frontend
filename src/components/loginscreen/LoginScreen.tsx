@@ -40,8 +40,7 @@ const LoginScreen = (props: {login: (userId: number) => void; isLoginSuccessful?
             }
             setIsRegisterLoading(false);
           })
-          .catch((error) => {
-            console.error('Error:', error);
+          .catch(() => {
             setIsRegisterSuccessful(false);
             setIsRegisterLoading(false);
           });

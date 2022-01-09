@@ -37,8 +37,8 @@ const LearningPanel = (): ReactElement => {
           setProgressRatio(result.finishedNum / total);
         }
       })
-      .catch((error) => {
-        console.error('Error:', error);
+      .catch(() => {
+        // Do nothing
       });
   };
 
@@ -70,8 +70,8 @@ const LearningPanel = (): ReactElement => {
           });
         updateProgress();
       })
-      .catch((error) => {
-        console.error('Error:', error);
+      .catch(() => {
+        // Do nothing
       });
   }, []);
 
@@ -99,8 +99,7 @@ const LearningPanel = (): ReactElement => {
             });
           updateProgress();
         })
-        .catch((error) => {
-          console.error('Error:', error);
+        .catch(() => {
           setIsLoading(false);
         });
     }
@@ -120,8 +119,8 @@ const LearningPanel = (): ReactElement => {
         setIsTerminated(false);
         updateCurrentWord();
       })
-      .catch((error) => {
-        console.error('Error:', error);
+      .catch(() => {
+        // Do nothing
       });
   };
 

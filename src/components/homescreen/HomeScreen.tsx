@@ -85,7 +85,7 @@ const HomeScreen = (props: {user: User; updateUser: () => void; logout: () => vo
                 position: 'relative',
                 top: 2
               }}/>
-              Saved
+              SAVED
             </Typography>
           </Fade>
           <IconButton

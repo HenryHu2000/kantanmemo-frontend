@@ -31,8 +31,7 @@ const App = (): ReactElement => {
           setIsLoginSuccessful(true);
           setIsLoginLoading(false);
         })
-        .catch((error) => {
-          console.error('Error:', error);
+        .catch(() => {
           removeCookie('user_id', cookieSetOptions);
           setUser(undefined);
           setIsLoginSuccessful(false);
