@@ -1,8 +1,9 @@
 import {ReactElement, useCallback, useEffect, useState} from 'react';
-import {Box, Button, ButtonGroup, CircularProgress, Container, Typography} from '@mui/material';
+import {Alert, Box, Button, ButtonGroup, CircularProgress, Container, Fade, IconButton, Snackbar, Typography} from '@mui/material';
 import Link from '@mui/material/Link';
 import LoadingButton from '@mui/lab/LoadingButton';
 import LinearProgress from '@mui/material/LinearProgress';
+import CloseIcon from '@mui/icons-material/Close';
 import {BACKEND_URL} from '../../../globals';
 import {DailyProgress, WordLearningData} from '../../../types';
 import './LearningPanel.scss';
@@ -18,6 +19,8 @@ const LearningPanel = (): ReactElement => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isTerminated, setIsTerminated] = useState<boolean>(false);
   const [progressRatio, setProgressRatio] = useState<number>(0);
+  const [isSnackbarOpen, setIsSnackbarOpen] = useState<boolean>(false);
+  const [isUndone, setIsUndone] = useState<boolean>(false);
 
   const updateProgress = () => {
     fetch(
@@ -167,6 +170,10 @@ const LearningPanel = (): ReactElement => {
                         if (isKnown === undefined) {
                           setIsKnown(true);
                         }
+                        if (panelState === PanelState.QUESTION) {
+                          setIsUndone(false);
+                          setIsSnackbarOpen(true);
+                        }
                         setPanelState(PanelState.ANSWER);
                       }}
                     >
@@ -196,6 +203,7 @@ const LearningPanel = (): ReactElement => {
                       disabled={panelState !== PanelState.ANSWER}
                       onClick={() => {
                         handleProceed();
+                        setIsSnackbarOpen(false);
                       }}
                       loading={isLoading}
                     >
@@ -203,6 +211,41 @@ const LearningPanel = (): ReactElement => {
                     </LoadingButton>
                   </ButtonGroup>
                 </Container>
+                <Snackbar open={isSnackbarOpen} autoHideDuration={6000}
+                  anchorOrigin={{vertical: 'top', horizontal: 'center'}}
+                  onClose={() => {
+                    setIsSnackbarOpen(false);
+                  }}
+                  TransitionComponent={Fade}
+                >
+                  <Alert 
+                    severity={!isUndone ? 'success' : 'info'} sx={{width: '100%'}}
+                    action={
+                      <>
+                        {!isUndone && (
+                          <Button color="inherit" size="small" onClick={() => {
+                            setIsKnown(false);
+                            setIsUndone(true);
+                          }}>
+                            UNDO
+                          </Button>
+                        )}
+                        <IconButton
+                          size="small"
+                          aria-label="close"
+                          color="inherit"
+                          onClick={() => {
+                            setIsSnackbarOpen(false);
+                          }}
+                        >
+                          <CloseIcon fontSize="small" />
+                        </IconButton>
+                      </>
+                    }
+                  >
+                    {!isUndone ? 'Finished learning this word' : 'This word will appear again'}
+                  </Alert>
+                </Snackbar>
               </>
             )
             : (
