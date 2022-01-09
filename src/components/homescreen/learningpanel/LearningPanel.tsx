@@ -19,7 +19,7 @@ const LearningPanel = (): ReactElement => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isTerminated, setIsTerminated] = useState<boolean>(false);
   const [progressRatio, setProgressRatio] = useState<number>(0);
-  const [isSnackbarOpen, setIsSnackbarOpen] = useState<boolean>(false);
+  const [isUndoAlertOpen, setIsUndoAlertOpen] = useState<boolean>(false);
   const [isUndone, setIsUndone] = useState<boolean>(false);
 
   const updateProgress = () => {
@@ -172,7 +172,7 @@ const LearningPanel = (): ReactElement => {
                         }
                         if (panelState === PanelState.QUESTION) {
                           setIsUndone(false);
-                          setIsSnackbarOpen(true);
+                          setIsUndoAlertOpen(true);
                         }
                         setPanelState(PanelState.ANSWER);
                       }}
@@ -203,7 +203,7 @@ const LearningPanel = (): ReactElement => {
                       disabled={panelState !== PanelState.ANSWER}
                       onClick={() => {
                         handleProceed();
-                        setIsSnackbarOpen(false);
+                        setIsUndoAlertOpen(false);
                       }}
                       loading={isLoading}
                     >
@@ -211,40 +211,45 @@ const LearningPanel = (): ReactElement => {
                     </LoadingButton>
                   </ButtonGroup>
                 </Container>
-                <Snackbar open={isSnackbarOpen} autoHideDuration={6000}
-                  anchorOrigin={{vertical: 'top', horizontal: 'center'}}
+                <Snackbar className="undo-alert-bar" 
+                  open={isUndoAlertOpen} 
+                  autoHideDuration={6000}
+                  anchorOrigin={{vertical: 'bottom', horizontal: 'center'}}
                   onClose={() => {
-                    setIsSnackbarOpen(false);
+                    setIsUndoAlertOpen(false);
                   }}
                   TransitionComponent={Fade}
+                  sx={{left: {xs: 0, sm: '50%'}}}
                 >
-                  <Alert 
-                    severity={!isUndone ? 'success' : 'info'} sx={{width: '100%'}}
-                    action={
-                      <>
-                        {!isUndone && (
-                          <Button color="inherit" size="small" onClick={() => {
-                            setIsKnown(false);
-                            setIsUndone(true);
-                          }}>
-                            UNDO
-                          </Button>
-                        )}
-                        <IconButton
-                          size="small"
-                          aria-label="close"
-                          color="inherit"
-                          onClick={() => {
-                            setIsSnackbarOpen(false);
-                          }}
-                        >
-                          <CloseIcon fontSize="small" />
-                        </IconButton>
-                      </>
-                    }
-                  >
-                    {!isUndone ? 'Finished learning this word' : 'This word will appear again'}
-                  </Alert>
+                  <Container maxWidth="sm">
+                    <Alert 
+                      severity={!isUndone ? 'success' : 'info'} sx={{width: '100%'}}
+                      action={
+                        <>
+                          {!isUndone && (
+                            <Button color="inherit" size="small" onClick={() => {
+                              setIsKnown(false);
+                              setIsUndone(true);
+                            }}>
+                              UNDO
+                            </Button>
+                          )}
+                          <IconButton
+                            size="small"
+                            aria-label="close"
+                            color="inherit"
+                            onClick={() => {
+                              setIsUndoAlertOpen(false);
+                            }}
+                          >
+                            <CloseIcon fontSize="small" />
+                          </IconButton>
+                        </>
+                      }
+                    >
+                      {!isUndone ? 'Finished learning this word' : 'This word will appear again'}
+                    </Alert>
+                  </Container>
                 </Snackbar>
               </>
             )
