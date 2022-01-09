@@ -187,7 +187,7 @@ const Settings = (props: {updateUser: () => void; isSettingsOpen: boolean}): Rea
             <p>Select a wordlist CSV file to upload</p>
           )}
           <div>
-            <Button variant="contained" onClick={handleUpload}>Upload</Button>
+            <Button variant="outlined" onClick={handleUpload}>Upload</Button>
           </div>
         </div>
       </div>

@@ -1,16 +1,21 @@
 import {AppBar, Box, Container, CssBaseline, Dialog, DialogContent, DialogTitle, Divider, IconButton, Link, Menu, MenuItem, Toolbar, Typography} from '@mui/material';
 import React, {ReactElement, useEffect, useState} from 'react';
+import MoreIcon from '@mui/icons-material/MoreVert';
+import CloseIcon from '@mui/icons-material/Close';
 import Settings from './settings/Settings';
 import {User} from '../../types';
 import LearningPanel from './learningpanel/LearningPanel';
 import './HomeScreen.scss';
-import MoreIcon from '@mui/icons-material/MoreVert';
 
 const HomeScreen = (props: {user: User; updateUser: () => void; logout: () => void}): ReactElement => {
   const [isSettingsOpen, setIsSettingsOpen] = useState<boolean>(false);
   const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement>();
-  const handleClose = () => {
+  const handleCloseMenu = () => {
     setAnchorEl(undefined);
+  };
+  const handleCloseSettings = () => {
+    setIsSettingsOpen(false);
+    props.updateUser();
   };
 
   useEffect(() => {
@@ -43,7 +48,7 @@ const HomeScreen = (props: {user: User; updateUser: () => void; logout: () => vo
               id="basic-menu"
               anchorEl={anchorEl}
               open={Boolean(anchorEl)}
-              onClose={handleClose}
+              onClose={handleCloseMenu}
               MenuListProps={{
                 'aria-labelledby': 'basic-button'
               }}
@@ -51,13 +56,13 @@ const HomeScreen = (props: {user: User; updateUser: () => void; logout: () => vo
               <MenuItem>{props.user.name} (ID: {props.user.id})</MenuItem>
               <Divider />
               <MenuItem onClick={() => {
-                setAnchorEl(undefined);
+                handleCloseMenu();
                 setIsSettingsOpen(true);
               }}>
                 Settings
               </MenuItem>
               <MenuItem onClick={() => {
-                setAnchorEl(undefined);
+                handleCloseMenu();
                 props.logout();
               }}>
                 Logout
@@ -67,11 +72,22 @@ const HomeScreen = (props: {user: User; updateUser: () => void; logout: () => vo
         </Toolbar>
       </AppBar>
 
-      <Dialog open={isSettingsOpen} onClose={() => {
-        setIsSettingsOpen(false);
-        props.updateUser();
-      }}>
-        <DialogTitle>Settings</DialogTitle>
+      <Dialog open={isSettingsOpen} onClose={handleCloseSettings}>
+        <DialogTitle>
+          Settings
+          <IconButton
+            aria-label="close"
+            onClick={handleCloseSettings}
+            sx={{
+              position: 'absolute',
+              right: 8,
+              top: 8,
+              color: (theme) => theme.palette.grey[500]
+            }}
+          >
+            <CloseIcon />
+          </IconButton>
+        </DialogTitle>
         <DialogContent>
           <Settings updateUser={props.updateUser} isSettingsOpen={isSettingsOpen}/>
         </DialogContent>
