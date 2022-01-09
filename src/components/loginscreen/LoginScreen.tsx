@@ -16,9 +16,10 @@ const LoginScreen = (props: {login: (userId: number) => void; isLoginSuccessful?
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (isRegistering) {
-      if (userNameText !== '') {
+      const trimmedName = userNameText.trim();
+      if (trimmedName !== '') {
         setIsRegisterLoading(true);
-        const data = new URLSearchParams([['user_name', userNameText]]);
+        const data = new URLSearchParams([['user_name', trimmedName]]);
         fetch(
           BACKEND_URL + '/user/register',
           {
