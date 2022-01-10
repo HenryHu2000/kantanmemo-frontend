@@ -74,27 +74,20 @@ const HomeScreen = (props: {user: User; updateUser: () => void; logout: () => vo
         </Toolbar>
       </AppBar>
 
-      <Dialog open={isSettingsOpen} onClose={handleCloseSettings}>
+      <Dialog open={isSettingsOpen} onClose={handleCloseSettings} className="settings-dialog">
         <DialogTitle>
           Settings
           <Fade in={isSettingsSaved}>
-            <Typography display="inline" color="success.main" sx={{
-              margin: 1
-            }}>
-              <CheckCircleOutlineIcon fontSize="inherit" color="inherit" sx={{
-                position: 'relative',
-                top: 2
-              }}/>
+            <Typography display="inline" color="success.main" className="changes-saved-text">
+              <CheckCircleOutlineIcon fontSize="inherit" color="inherit"/>
               SAVED
             </Typography>
           </Fade>
           <IconButton
+            className="close-button"
             aria-label="close"
             onClick={handleCloseSettings}
             sx={{
-              position: 'absolute',
-              right: 8,
-              top: 8,
               color: (theme) => theme.palette.grey[500]
             }}
           >

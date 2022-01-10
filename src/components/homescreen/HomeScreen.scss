@@ -1,3 +1,20 @@
 .HomeScreen {
 
 }
+
+.settings-dialog {
+  .changes-saved-text {
+    font-size: 75%;
+    margin: 0 8px;
+    svg {
+      position: relative;
+      top: 2px;
+    }
+  }
+
+  .close-button {
+    position: absolute;
+    right: 8px;
+    top: 8px;
+  }
+}
