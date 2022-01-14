@@ -222,7 +222,7 @@ const LearningPanel = (): ReactElement => {
                 >
                   <Container maxWidth="sm">
                     <Alert 
-                      severity={!isUndone ? 'success' : 'info'} sx={{width: '100%'}}
+                      severity={!isUndone ? 'success' : 'warning'} sx={{width: '100%'}}
                       action={
                         <>
                           {!isUndone && (
